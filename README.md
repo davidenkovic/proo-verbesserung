@@ -18,8 +18,7 @@ public async Task<List<RoomDTO>> GetRoomsAsync()
     }).ToListAsync();
 }
 ```
-
-Man sieht, dass ich bei _GetRoomsAsync()_ es irgendwie geschaft habe eine Lösung zu bekommen welche auf keiner Art und weise schön ist.
+Meine Lösung für _GetRoomsAsync()_ war leider nicht sehr schön.
 
 _neuer Code:_
 
@@ -60,11 +59,11 @@ public static bool CheckIsEmpty(Booking booking)
 }
 ```
 
-Hier kann man sehen das ich eine neue Mehode geschrieben habe, welche mir das **richtige** überprüfen des Datums ermöglicht. Mit booking als Parameter kann ich leicht überprüfen ob der Raum am heutigen Tag zur verfügung steht. 
+Die neue Methode ermöglicht mir ein besseres Überprüfen des Datums. Mit _booking_ als Parameter lässt sich feststellen, ob der Raum am heutigen Tag zur Verfügung steht.
 
-Es wurde berückichtigt das ein Customer in voraus Buchen kann. Somit kann eine beliebiger Customer davor noch einen Raum buchen.
+Es wurde berücksichtigt, dass ein Customer im Voraus buchen kann. 
 
-Mit denn Elvis Operatoren habe ich leicht überprüfen können, ob die Buchung null ist oder nicht.
+Mit Hilfe der Elvis-Operatoren konnte ich leicht überprüfen, ob die Buchung null ist.
 
 ## Index.cshtml (Main page)
 
@@ -98,7 +97,7 @@ _alter Code:_
 
 ````
 
-Die Klasse index.cshtml habe ich während der Prüfung nur schnell gemacht da ich keine Zeit hatte. Das wurde natürlich ersetzt um die Richtige Tabelle anzuzeigen.
+Die Klasse **index.cshtml** habe ich während der Prüfung aufgrund von Zeitmangel nur grob zusammengestellt. In der Verbesserung sieht die Tabelle der Angabe entsprechend aus:
 
 _neuer Code:_
 
@@ -126,11 +125,11 @@ _neuer Code:_
 </div>
 ````
 
-Diese Tabelle zeigt jetzt den Nachnamen, Vornamen und die Anzahl der Buchungen.
+Nachnamen, Vornamen und die Anzahl der Buchungen werden nun angezeigt.
 
-Wie man leicht bemerken kann hat sich meine Liste zum anzeigen geändert. Jetzt verwende ich eine neu erstelte DTO Klasse Namens _CustomerDTO_.
+Auch die Liste, welche die Tabelle befüllt, hat sich geändert. Jetzt verwende ich eine neu erstelltes DTO namens _CustomerDTO_:
 
-_neue Code:_
+_CustomerDTO:_
 ````csharp
 public class CustomerDTO
 {
@@ -141,9 +140,7 @@ public class CustomerDTO
 }
 ````
 
-Diese wird dann in unserer Model Klasse verwendet und als Liste befüllt.
-
-_neue Code:_
+_neuer Code:_
 ````csharp
 public class IndexModel : PageModel
 {
@@ -163,15 +160,15 @@ public class IndexModel : PageModel
 
     public async Task OnGet()
     {
-        Customers = await _unitOfWork.Customers.GetCustomersForView(); // neue Methode in der Repository
+        Customers = await _unitOfWork.Customers.GetCustomersForView(); // neue Methode im Repository
 
     }
 }
 ````
 
-Das abfragen der Customer passiert mit einem einfachen Select welches dann das DTO befüllt.
+Das Abfragen der Customer passiert mit einem einfachen Select, welches dann die DTO-Liste befüllt:
 
-_neue Code:_
+_neuer Code:_
 ````csharp
 public async Task<List<CustomerDTO>> GetCustomersForView()
 {
@@ -187,9 +184,9 @@ public async Task<List<CustomerDTO>> GetCustomersForView()
 
 ### Filter
 
-Um die Filter Option zu erfüllen, fügen wir folgenden Code hinzu.
+Um die Filter-Option zu erfüllen, fügen wir folgenden Code hinzu:
 
-_neue Code:_
+_neuer Code:_
 ````csharp
 <form method="post" class="form-inline">
     <div class="form-group">
@@ -207,11 +204,11 @@ _neue Code:_
 
 ````
 
-Die Form wird verwendet um die Tabelle zu filtern. Leider funktioniert sie noch nicht ganz.
+Die Form wird verwendet, um die Tabelle zu filtern. Leider funktioniert sie noch nicht ganz.
 
-Die Model Klasse wurde angepasst an der Form. 
+Die Model-Klasse wurde an die Form angepasst:
 
-_neue Code:_
+_neuer Code:_
 ````csharp
 private readonly ILogger<IndexModel> _logger;
 private IUnitOfWork _unitOfWork;
@@ -250,28 +247,28 @@ public async Task OnGet()
 }
 ````
 
-Was hier noch nicht geht ist, dass nach dem button klick die Tablle leer ist. (leider keine kraft mehr um den Fehler zu suchen)
+Was hier noch nicht funktioniert ist das Leeren der Tabelle via Buttonclick. (leider keine Kraft mehr um den Fehler zu suchen)
 
 ### Edit
 
-Um ein Feld zu Editieren fügen wir eine weiter Spalte in die Tabelle ein.
+Um ein Feld zu editieren fügen wir eine weiter Spalte in die Tabelle ein:
 
 ````html
 <td><a asp-page="/Customers/Edit" asp-route-id="@item.CustomerId">Bearbeiten</a></td>
 ````
 
-Dieser link leitet uns auf unsere Edit seite und übergibt auch die CustomerId die benötoigt wird um einen Customer zu bearbeiten.
+Dieser Link leitet uns auf unsere Edit-Seite und übergibt die CustomerId, welche benötigt wird, um einen Customer zu bearbeiten.
 
 ## Edit.cshtml
 
 ### Edit
 
-In der Edit Model Klasse haben wir die Methode OnGetAsync() die mit dem Edit link aufgerufen wird.
-Diese leifert die id mit.
+In der Edit-Model-Klasse haben wir die Methode _OnGetAsync()_, welche mit dem Edit-Link aufgerufen wird.
+Dadurch wird die ID mitgeliefert.
 
-Mit der Id können wir dann die Custommer bekommen.
+So können wir dann auf den entsprechenden Customer zugreifen:
 
-_neue Code:_
+_neuer Code:_
 ````csharp
 [BindProperty]
 public Customer CurrentCustomer { get; set; }
@@ -285,9 +282,9 @@ public async Task<IActionResult> OnGetAsync(int? id)
 }
 ````
 
-In Edit.cshtml können wir den Customer mithilfer der form anzeigen und auch bearbeiten. Das speichern passier mit einem Button.
+In _Edit.cshtml_ können wir den Customer mit Hilfe der Form anzeigen und auch bearbeiten. Das Speichern passiert über einen Button.
 
-_neue Code:_
+_neuer Code:_
 ````html
 <div class="row">
 <div class="col-md-4">
@@ -320,9 +317,9 @@ _neue Code:_
 </div>
 ````
 
-Nach dem der Button gedrückt wird, wird ein Post Request ausgeführt. Dieser "starten"dann die Methode _OnPostAsync()_.
+Nachdem der Button gedrückt wurde, wird ein Post-Request ausgeführt. Die Methode _OnPostAsync()_ wird "gestartet".
 
-_neue Code:_
+_neuer Code:_
 ````csharp
 public async Task<IActionResult> OnPostAsync()
 {
@@ -356,9 +353,9 @@ public async Task<IActionResult> OnPostAsync()
 
 ### Bookings anzeigen
 
-Um die Bookings eines Customers anzuzeigen, fügen wir zur unserer OnGetAsync() Methode noch etwas hinzu.
+Um die Bookings eines Customers anzuzeigen, fügen wir zur unserer _OnGetAsync()_ Methode noch etwas hinzu:
 
-_neue Code:_
+_neuer Code:_
 ````csharp
 public async Task<IActionResult> OnGetAsync(int? id)
 {
@@ -369,9 +366,9 @@ public async Task<IActionResult> OnGetAsync(int? id)
 }
 ````
 
-Die Methode GetBookingsForCustomer() hollt sich alle Bookings die zu dem jeweiligen Customer gehören.
+Die Methode _GetBookingsForCustomer()_ holt sich alle Bookings, welche zu dem jeweiligen Customer gehören.
 
-_neue Code:_
+_neuer Code:_
 ````csharp
 
 public async Task<List<BookingForCustomerDTO>> GetBookingsForCustomer(int customerId)
@@ -391,13 +388,13 @@ public async Task<List<BookingForCustomerDTO>> GetBookingsForCustomer(int custom
         }
 ````
 
-Problem hier ist das DaysSleep eine Comma Zahl ausgibt. Deshalb habe ich die Zahl gerundet.
+_DaysSleep_ stellt ein Problem dar, da es eine Kommazahl ausgibt. Um das zu umgehen, habe ich die Zahl gerundet:
 
 ````csharp
 DaysSleeped = b.To != null ? Math.Round((b.To - b.From).Value.TotalDays,0) : -1
 ````
 
-Die Buchungen werden in einer Tabelle angezeigt, nachdem sie in die Liste CustomerBookings gespeichert worden sind.
+Die Buchungen werden in einer Tabelle angezeigt, nachdem sie in die Liste _CustomerBookings_ gespeichert worden sind.
 
 ````html
 <h4>Zimmerbuchungen</h4>
@@ -441,7 +438,7 @@ Die Buchungen werden in einer Tabelle angezeigt, nachdem sie in die Liste Custom
 </tbody>
 </table>
 ````
-In OnPostAsync() fügen wir noch die Zeile hinzu, um die Tabelle nach dem bearbeiten eines Customer zu Updaten.
+In _OnPostAsync()_ fügen wir noch diese Zeile hinzu, um die Tabelle nach dem Bearbeiten eines Customers zu updaten.
 
 ````csharp
 CustomerBookings = await _uow.Bookings.GetBookingsForCustomer(CurrentCustomer.Id);
@@ -449,6 +446,6 @@ CustomerBookings = await _uow.Bookings.GetBookingsForCustomer(CurrentCustomer.Id
 
 ## Edit
 
-Das Edit passiert indem man auf den Speichern Button drück. Leider Funktionert er aber nicht.
+Das Editieren passiert, in dem man auf den "Speichern" Button drückt. Dieser funktioniert aber leider nicht.
 
-Fügt man aber ```await _uow.Customers.AddAsync(CurrentCustomer);``` hinzu, müsste man die email ändern und somit wäre ein neuer Customer in unserer Tabelle.
+Fügt man allerdings ```await _uow.Customers.AddAsync(CurrentCustomer);``` hinzu, müsste man die E-Mail ändern, dann wäre ein neuer Customer in unserer Tabelle.
