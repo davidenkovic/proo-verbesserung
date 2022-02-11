@@ -1,0 +1,87 @@
+﻿@page
+@model WebApp.Pages.Customers.EditModel
+
+@{
+    ViewData["Title"] = "Bearbeiten";
+}
+
+<h1>Bearbeite</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div class="form-group">
+                <label>Vorname</label>
+                <input asp-for="CurrentCustomer.FirstName" class="form-control" type="text"/>
+                <span asp-validation-for="CurrentCustomer.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Nachname4</label>
+                <input asp-for="CurrentCustomer.LastName" class="form-control" type="text"/>
+                <span asp-validation-for="CurrentCustomer.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Email-Adresse</label>
+                <input asp-for="CurrentCustomer.EmailAddress" class="form-control" type="email"/>
+                <span asp-validation-for="CurrentCustomer.EmailAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Vorname</label>
+                <input asp-for="CurrentCustomer.CreditCardNumber" class="form-control" type="text"/>
+                <span asp-validation-for="CurrentCustomer.CreditCardNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Speichern" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+<h4>Zimmerbuchungen</h4>
+<table class="table">
+     <thead>
+            <tr>
+                <th>
+                    Von
+                </th>
+                <th>
+                    Bis
+                </th>
+                <th>
+                    Zimmer
+                </th>
+                <th>
+                    Zimmertyp
+                </th>
+                  <th>
+                    Anzahl Übernachtungen
+                </th>
+            </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CustomerBookings) {
+                <tr>
+                    <td>@item.From</td>
+                    <td>@item.To</td>
+                    <td>@item.RoomNumber</td>
+                    <td>@item.RoomType</td>
+                    @if(@item.DaysSleeped == -1)
+                    {
+                        <td></td>
+                    }
+                    @if(@item.DaysSleeped != -1)
+                    {
+                        <td>@item.DaysSleeped</td>
+                    }
+                </tr>
+            }
+    </tbody>
+</table>
+
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

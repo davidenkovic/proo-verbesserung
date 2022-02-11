@@ -1,0 +1,44 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<h1>Kundenübersicht</h1>
+
+<form method="post" class="form-inline">
+        <div class="form-group">
+            <label>Filter Name:</label>
+            <input  class="form-control" type="text"/> @*asp-for="  "*@ <!--werte setzen in NameFiltered-->
+
+            <label>Nur mit aktuellen Buchungen</label>
+            <input class="form-control" type="checkbox"/> @*asp-for="actualBookingsChecked"*@ <!--werte setzen in ActualBookingsChecked-->
+
+         </div>
+        <div class="form-group">
+            <input type="submit" value="Aktualisieren" class="btn btn-primary" />
+        </div>
+    </form>
+
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nachname</th>
+                <th>Vorname</th>
+                <th>Anzahl Buchungen</th>
+                <th>Bearbeiten</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Customers) {
+                <tr>
+                 <td>@item.LastName</td>
+                 <td>@item.FirstName</td>
+                 <td>@item.CountBookings</td>
+                 <td><a asp-page="/Customers/Edit" asp-route-id="@item.CustomerId">Bearbeiten</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
